@@ -1,0 +1,15 @@
+<!doctypehtml><html lang="en"class="dark"><meta charset="UTF-8"><meta name="viewport"content="width=device-width,initial-scale=1"><title>Captured by What</title><link href="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/css/bootstrap-nightshade.min.css"rel="stylesheet"><link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/stackoverflow-dark.min.css"><style>h1{text-align:center;margin-top:1em;margin-bottom:1em}h2{margin-top:1em;margin-bottom:.5em}td{font-size:1em}td.safe{color:#fff;background-color:#33a02c}td.semi-safe{color:#fff;background-color:#f07800}td.unsafe{color:#fff;background-color:#e41d20}pre{font-size:1em}</style><div class="container-xxl"><h1>How Are Local Variables Captured in Different Languages?</h1><div class="row"><div class="col-xs-12"><div class="table-responsive"><table class="table table-bordered table-dark"><thead><tr><th><th>When unspecified<th>Immutable Copy<th>Mutable Copy<th>Immutable Reference<th>Mutable Reference<th>Move<th>Out of Scope Reference<tbody><tr><td>C++<td class="safe">No captures<td>[a]()<td>[a]() mutable<td>[&amp;a = std::as_const(a)]()<td>[&amp;a]()<td><td class="unsafe">Undefined behavior<tr><td>C#<td class="unsafe">Mutable reference<td><td><td><td><td><td>Lifetime extension<tr><td>Java<td class="safe">Immutable variables only<td><td><td><td><td><td>Impossible<tr><td>Golang<td class="unsafe">Mutable reference<td><td><td><td><td><td>Lifetime extension<tr><td>Rust<td class="safe">Inferred<td><td><td><td><td>move ||<td>Compiler check<tr><td>Python Inner Function<td class="safe">No captures<td><td><td><td>nonlocal a<td><td>Lifetime extension<tr><td>Python Lambda<td class="semi-safe">Immutable reference<td><td><td><td><td><td>Lifetime extension<tr><td>Swift<td class="unsafe">Mutable reference<td><td><td><td><td><td>Lifetime extension<tr><td>Objective C<td class="safe">Immutable copy<td><td><td><td>__block int a<td><td>Lifetime extension<tr><td>Javascript<td class="unsafe">Mutable reference<td><td><td><td><td><td>Lifetime extension<tr><td>PHP anonymous function<td class="safe">No captures<td><td>function () use ($a)<td><td>function () use (&amp;$a)<td><td>Lifetime extension<tr><td>PHP arrow function<td class="semi-safe">Mutable Copy<td><td><td><td><td><td>Lifetime extension</table></div></div></div><h2>DIY Copy</h2><div><p>To simulate a mutable copy in a mutable reference only environment, you can copy a local variable yourself:<pre><code class="language-csharp">var a = 1;
+var lambda;
+{
+    var x = a;
+    lambda = () => ++x;
+}
+var b = lambda();
+// a == 1
+// b == 2</code></pre><p>In a language that support default values in lambda, you can abuse the feature:<pre><code class="language-csharp">var a = 1;
+lambda = (x = a) => ++x;
+var b = lambda();
+var c = lambda(10); // anti-feature unless it is what you want
+// a == 1
+// b == 2
+// c == 11</code></pre></div></div><script src="https://cdn.jsdelivr.net/npm/bootstrap-dark-5@1.1.3/dist/js/darkmode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script><script>hljs.highlightAll()</script>
