@@ -210,7 +210,7 @@ var b = lambda();
             <pre><code class="language-csharp">var a = 1;
 lambda = (x = a) => ++x;
 var b = lambda();
-var c = lambda(10); // anti-feature unless it is what you want
+var c = lambda(10); // anti-feature unless you want it
 // a == 1
 // b == 2
 // c == 11</code></pre>
@@ -218,7 +218,10 @@ var c = lambda(10); // anti-feature unless it is what you want
         <h2>DIY Reference</h2>
         <div>
             <p>Conversely, you will have to use a container that copying does not affect its content. It is typically a heap-allocated instance of a class with the variable being a pointer:</p>
-            <pre><code class="language-csharp">var a = new Container(1);
+            <pre><code class="language-csharp">var a = new Container()
+{
+    Value = 1
+};
 var lambda;
 {
     lambda = () => ++a->Value;
